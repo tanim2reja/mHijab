@@ -1,15 +1,26 @@
 package com.mukramin.mhijab.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.mukramin.mhijab.Item;
+import com.mukramin.mhijab.L2R;
 import com.mukramin.mhijab.R;
 
 import java.util.ArrayList;
@@ -17,29 +28,23 @@ import java.util.ArrayList;
 /**
  * Created by Tanim reja on 10/20/2015.
  */
-public class ImageAdapter extends BaseAdapter {
+public class ImageAdapter extends ArrayAdapter<Item> {
 
-    private Context context;
-    ArrayList<String> imageList = new ArrayList();
+    Context context;
+    int layoutResourceId;
+    ArrayList<Item> gridItemList = new ArrayList<Item>();
 
-    public ImageAdapter(Context context, ArrayList<String> imagePathList){
+    public ImageAdapter(Context context,int layoutResourceId, ArrayList<Item> gridItemList){
+        super(context, layoutResourceId, gridItemList);
         this.context=context;
-        this.imageList=imagePathList;
-    }
+        this.layoutResourceId=layoutResourceId;
+        this.gridItemList=gridItemList;
 
-    void add(String path){
-        imageList.add(path);
     }
-
 
     @Override
     public int getCount() {
-        return imageList.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return null;
+        return gridItemList.size();
     }
 
     @Override
@@ -48,54 +53,36 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        RecordHolder holder = null;
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View gridView;
-
-        ImageView imageView;
-        if (convertView == null) {
-            gridView = new View(context);
-
-            // get layout from mobile.xml
-            gridView = inflater.inflate(R.layout.custom_image_view, null);
-
-
-
-            imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
-            imageView.setLayoutParams(new GridView.LayoutParams(200, 200));
-          //  imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-          //  imageView.setPadding(5, 5, 5, 5);
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
+            holder = new RecordHolder();
+            holder.txtTitle = (TextView) row.findViewById(R.id.item_text);
+            holder.imageItem = (ImageView) row.findViewById(R.id.item_image);
+            row.setTag(holder);
         } else {
-            imageView = (ImageView) convertView;
+            holder = (RecordHolder) row.getTag();
         }
-        Bitmap bm = decodeSampledBitmapFromUri(imageList.get(position), 220, 220);
-        imageView.setImageBitmap(bm);
-        return imageView;
+
+        Item item = gridItemList.get(position);
+        holder.txtTitle.setText(item.getTitle());
+        holder.imageItem.setImageBitmap(item.getBm());
+
+
+
+        return row;
+
+
+
     }
 
-    public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
-        Bitmap bm = null;
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        bm = BitmapFactory.decodeFile(path, options);
-        return bm;
+    static class RecordHolder {
+        TextView txtTitle;
+        ImageView imageItem;
     }
 
-    public int calculateInSampleSize(  BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-        if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
-                inSampleSize = Math.round((float)height / (float)reqHeight);
-            } else {
-                inSampleSize = Math.round((float)width / (float)reqWidth);
-            }
-        }  return inSampleSize;
-    }
 }

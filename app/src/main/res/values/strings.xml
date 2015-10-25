@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">mHijab</string>
 
+    <string name="facebook_app_id">422897147905549</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_face_book__auth">FaceBook_Auth</string>
+
+    <string name="no_network_connection_toast">No network connection found</string>
+    <string name="clear_cache_menu">Clear Caches</string>
+    <string name="clear_cache_complete_toast">Caches have been cleared</string>
+    <string name="imageview_description">Image Thumbnail</string>
 </resources>

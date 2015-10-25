@@ -3,20 +3,68 @@
     package="com.mukramin.mhijab" >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name=".Home"
-            android:label="@string/app_name" >
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+
+
+        <activity android:name=".ui.ImageGridActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.ImageDetailActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.ImageGridActivity"
+            android:theme="@style/AppThemeDark.FullScreen" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ImageGridActivity" />
+        </activity>
+
+
+
+
+
+
+        <activity
+            android:name=".Home"
+            android:label="@string/app_name" >
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+
+
+
+
+
+
+        <activity
+            android:name=".facebook.FaceBook_Auth"
+            android:label="@string/title_activity_face_book__auth" >
+        </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+        <provider android:authorities="com.facebook.app.FacebookContentProvider422897147905549"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>
