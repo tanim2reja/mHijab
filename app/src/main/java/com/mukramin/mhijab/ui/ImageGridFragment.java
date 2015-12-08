@@ -334,4 +334,6 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             return mNumColumns;
         }
     }
+
 }
+

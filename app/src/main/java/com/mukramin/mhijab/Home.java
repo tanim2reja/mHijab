@@ -7,8 +7,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Bundle;
@@ -100,13 +104,16 @@ public class Home extends Activity {
 
 
         for (File file : files){
-            // imageList.add(file.getAbsolutePath());
-            //Bitmap bitmap=BitmapFactory.decodeResource(this.getResources(), R.drawable.home);
-            Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 220, 220);
-            // bm=createSquaredBitmap(bm);
-            // bm= ThumbnailUtils.extractThumbnail(bm, bm.getHeight(), bm.getWidth());
-            //  bm = Bitmap.createScaledBitmap(bm, 200, 200, true);
-            gridItemList.add(new Item(bm,"Tanim"));
+             Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 520, 520);
+
+             int dimension = getSquareCropDimensionForBitmap(bm);
+             bm = ThumbnailUtils.extractThumbnail(bm, dimension, dimension);
+
+             bm= ThumbnailUtils.extractThumbnail(bm, dimension, dimension, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+
+
+
+            gridItemList.add(new Item(bm));
         }
 
 
@@ -116,19 +123,17 @@ public class Home extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                ImageAdapter adapter = (ImageAdapter)adapterView.getAdapter();
-                Item item =adapter.getItem(i);
+                ImageAdapter adapter = (ImageAdapter) adapterView.getAdapter();
+                Item item = adapter.getItem(i);
 
 
-
-                Bitmap image =item.getBm(); //((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                Bitmap image = item.getBm(); //((BitmapDrawable)imageView.getDrawable()).getBitmap();
                 SharePhoto photo = new SharePhoto.Builder()
                         .setBitmap(image)
                         .build();
                 SharePhotoContent content = new SharePhotoContent.Builder()
                         .addPhoto(photo)
                         .build();
-
 
 
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -139,13 +144,31 @@ public class Home extends Activity {
                             .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
                             .build();*/
 
-                    shareDialog.show(content);
+                    //  shareDialog.show(content);
                 }
 
 
             }
         });
 
+    }
+
+    public int getSquareCropDimensionForBitmap(Bitmap bitmap)
+    {
+        int dimension;
+        //If the bitmap is wider than it is tall
+        //use the height as the square crop dimension
+        if (bitmap.getWidth() >= bitmap.getHeight())
+        {
+            dimension = bitmap.getHeight();
+        }
+        //If the bitmap is taller than it is wide
+        //use the width as the square crop dimension
+        else
+        {
+            dimension = bitmap.getWidth();
+        }
+        return dimension;
     }
 
 
@@ -168,17 +191,20 @@ public class Home extends Activity {
     public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
         Bitmap bm = null;
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+
         BitmapFactory.decodeFile(path, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         options.inJustDecodeBounds = false;
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
         bm = BitmapFactory.decodeFile(path, options);
+
         return bm;
     }
 
     public int calculateInSampleSize(  BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
+
         final int width = options.outWidth;
+        final int height = options.outHeight;
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
             if (width > height) {
@@ -186,6 +212,7 @@ public class Home extends Activity {
             } else {
                 inSampleSize = Math.round((float)width / (float)reqWidth);
             }
+
         }  return inSampleSize;
     }
 

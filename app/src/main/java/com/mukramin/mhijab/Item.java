@@ -15,6 +15,9 @@ public class Item {
         this.bm=bm;
         this.title=title;
     }
+    public Item(Bitmap bm){
+        this.bm=bm;
+    }
 
     public Bitmap getBm() {
         return bm;

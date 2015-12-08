@@ -94,8 +94,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
 
         // Enable some additional newer visibility and ActionBar features to create a more
         // immersive photo viewing experience
-        if (Utils.hasHoneycomb()) {
-            final ActionBar actionBar = getActionBar();
+        if (!Utils.hasHoneycomb()) {
+            final ActionBar actionBar = this.getActionBar();
 
             // Hide title text and set home as up
             actionBar.setDisplayShowTitleEnabled(false);

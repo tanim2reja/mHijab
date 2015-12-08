@@ -212,8 +212,7 @@ public class ImageFetcher extends ImageResizer {
                         }
                         DiskLruCache.Editor editor = mHttpDiskCache.edit(key);
                         if (editor != null) {
-                            if (downloadUrlToStream(data,
-                                    editor.newOutputStream(DISK_CACHE_INDEX))) {
+                            if (downloadUrlToStream(data,editor.newOutputStream(DISK_CACHE_INDEX))) {
                                 editor.commit();
                             } else {
                                 editor.abort();

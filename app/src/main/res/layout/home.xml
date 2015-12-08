@@ -93,15 +93,14 @@
 
 
     <GridView
+        style="@style/PhotoGridLayout"
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridView"
-        android:layout_margin="1dp"
-        android:columnWidth="100dp"
+        android:columnWidth="@dimen/image_thumbnail_size"
+        android:horizontalSpacing="@dimen/image_thumbnail_spacing"
         android:numColumns="auto_fit"
-        android:verticalSpacing="2dp"
-        android:horizontalSpacing="2dp"
         android:stretchMode="columnWidth"
-        android:gravity="center"
+        android:verticalSpacing="@dimen/image_thumbnail_spacing"
         android:background="@color/gray_800"/>
 </LinearLayout>
